@@ -100,27 +100,6 @@ em {
 strong {
   font-weight: var(--font-weight-medium);
 }
-/* Scrollbar and selection styles */
-::selection {
-  background-color: var(--color-primary);
-  color: white;
-}
-@media (orientation: landscape) {
-  ::-webkit-scrollbar {
-    width: 9px;
-    height: 11px;
-    background-color: transparent;
-  }
-  ::-webkit-scrollbar-track {
-    border-radius: 3px;
-    background-color: transparent;
-  }
-  ::-webkit-scrollbar-thumb {
-    border-radius: 10px;
-    background-color: var(--color-gray-300);
-    border: 2px solid var(--color-background);
-  }
-}
 /* CSS Variables */
 :root {
   --font-weight-bold: 700;

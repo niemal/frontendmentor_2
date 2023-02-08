@@ -1,4 +1,5 @@
 import styled, { keyframes, css } from "styled-components";
+import { QUERIES } from "../constants";
 import { useState, useContext, useEffect, useRef, createContext } from "react";
 import { DataContext } from "../MainBody";
 import Modal from "../Modal";
@@ -42,6 +43,11 @@ const Wrapper = styled.div`
   ${(p) => (p.update ? cssSlideDown : "")}
   box-shadow: ${(p) =>
     p.update ? "0px 1px 5px var(--color-moderate-blue)" : "none"};
+
+  @media ${QUERIES.phoneAndSmaller} {
+    flex-direction: column-reverse;
+    padding: 12px;
+  }
 `;
 
 const UpvoteWrapper = styled.div`
@@ -50,11 +56,18 @@ const UpvoteWrapper = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 12px;
-  padding: 12px;
-  border-radius: 8px;
+  gap: 10px;
+  padding: 8px;
+  border-radius: 12px;
   background-color: var(--color-very-light-gray);
   font-weight: var(--font-weight-bold);
+
+  @media ${QUERIES.phoneAndSmaller} {
+    flex-direction: row;
+    width: max-content;
+    padding: 10px;
+    gap: 16px;
+  }
 `;
 
 const UpvoteDownvote = styled.div`
@@ -159,6 +172,11 @@ const RepliesDecor = styled.div`
   border-left: 2px solid var(--color-light-gray);
   margin-left: 40px;
   padding-right: 40px;
+
+  @media ${QUERIES.phoneAndSmaller} {
+    margin-left: 0px;
+    padding-right: 12px;
+  }
 `;
 
 const RepliesContainer = styled.div`
@@ -169,11 +187,20 @@ const RepliesContainer = styled.div`
 `;
 
 const ActionPanel = styled.div`
-  display: flex;
+  display: ${(p) => (p.top ? "flex" : "none")};
   flex-wrap: wrap;
   gap: 24px;
   justify-content: center;
   align-items: center;
+
+  @media ${QUERIES.phoneAndSmaller} {
+    display: ${(p) => (p.top ? "none" : "flex")};
+  }
+`;
+
+const MobileWrapper = styled.div`
+  display: flex;
+  justify-content: space-between;
 `;
 
 const ActionWrapper = styled.div`
@@ -216,6 +243,32 @@ const ReplyToWrapper = styled.div`
 
   & img {
     object-fit: cover;
+  }
+
+  @media ${QUERIES.phoneAndSmaller} {
+    flex-direction: column;
+    gap: 16px;
+
+    & > img {
+      display: none;
+    }
+    & > div {
+      display: none;
+    }
+  }
+`;
+
+const MobileReplyWrapper = styled.div`
+  display: none;
+
+  @media ${QUERIES.phoneAndSmaller} {
+    display: flex !important;
+    justify-content: space-between;
+    width: 100%;
+
+    & img {
+      display: block !important;
+    }
   }
 `;
 
@@ -265,12 +318,17 @@ const UpdateWrapper = styled.div`
   gap: 16px;
 `;
 
+const AtUserName = styled.span`
+  font-weight: var(--font-weight-medium);
+  color: var(--color-moderate-blue);
+`;
+
 const ModalContext = createContext();
 
 function Comment({ post, currentUser, ...props }) {
   const [modalOn, setModalOn] = useState(false);
 
-  const { posts, setPosts, setChanged, maxId, setMaxId } =
+  const { posts, setPosts, setChanged, maxId, setMaxId, userNames } =
     useContext(DataContext);
   const replyRef = useRef(null);
   const updateRef = useRef(null);
@@ -454,33 +512,89 @@ function Comment({ post, currentUser, ...props }) {
   return (
     <>
       <Wrapper ref={commentRef} update={newUpdateVisual} {...props}>
-        <UpvoteWrapper>
-          <UpvoteDownvote
-            onClick={() => {
-              setVoteCount((c) => c + 1);
-            }}
-          >
-            <img
-              src={`/frontendmentor_2/images/icon-plus.svg`}
-              height={12}
-              width={12}
-              alt={"vote up"}
-            />
-          </UpvoteDownvote>
-          <VoteDisplay update={voteChangeVisual}>{voteCount}</VoteDisplay>
-          <UpvoteDownvote
-            onClick={() => {
-              setVoteCount((c) => c - 1);
-            }}
-          >
-            <img
-              src={`/frontendmentor_2/images/icon-minus.svg`}
-              height={4}
-              width={12}
-              alt={"vote down"}
-            />
-          </UpvoteDownvote>
-        </UpvoteWrapper>
+        <MobileWrapper>
+          <UpvoteWrapper>
+            <UpvoteDownvote
+              onClick={() => {
+                setVoteCount((c) => c + 1);
+              }}
+            >
+              <img
+                src={`/frontendmentor_2/images/icon-plus.svg`}
+                height={12}
+                width={12}
+                alt={"vote up"}
+              />
+            </UpvoteDownvote>
+            <VoteDisplay update={voteChangeVisual}>{voteCount}</VoteDisplay>
+            <UpvoteDownvote
+              onClick={() => {
+                setVoteCount((c) => c - 1);
+              }}
+            >
+              <img
+                src={`/frontendmentor_2/images/icon-minus.svg`}
+                height={3}
+                width={12}
+                alt={"vote down"}
+                style={{ marginBottom: "3px" }}
+              />
+            </UpvoteDownvote>
+          </UpvoteWrapper>
+          <ActionPanel>
+            <ActionWrapper
+              active={replyTo}
+              onClick={() => {
+                setReplyTo((r) => !r);
+              }}
+            >
+              <img
+                src={"/frontendmentor_2/images/icon-reply.svg"}
+                width={15}
+                height={15}
+                alt={"reply icon"}
+              />
+              <ActionLabel>Reply</ActionLabel>
+            </ActionWrapper>
+            {currentUser.username === post.user.username ? (
+              <>
+                <ActionWrapper
+                  delete={true}
+                  onClick={() => {
+                    setModalOn(true);
+                    document.body.style.overflow = "hidden";
+                  }}
+                >
+                  <img
+                    src={"/frontendmentor_2/images/icon-delete.svg"}
+                    width={15}
+                    height={15}
+                    alt={"delete icon"}
+                  />
+                  <ActionLabel style={{ color: "var(--color-soft-red)" }}>
+                    Delete
+                  </ActionLabel>
+                </ActionWrapper>
+                <ActionWrapper
+                  active={updateThis}
+                  onClick={() => {
+                    setUpdateThis((u) => !u);
+                  }}
+                >
+                  <img
+                    src={"/frontendmentor_2/images/icon-edit.svg"}
+                    width={15}
+                    height={15}
+                    alt={"edit icon"}
+                  />
+                  <ActionLabel>Edit</ActionLabel>
+                </ActionWrapper>
+              </>
+            ) : (
+              ""
+            )}
+          </ActionPanel>
+        </MobileWrapper>
 
         <MainContent>
           <TopRow>
@@ -489,6 +603,7 @@ function Comment({ post, currentUser, ...props }) {
                 src={post.user.image.webp.replace("./", "/frontendmentor_2/")}
                 width={30}
                 height={30}
+                alt={"author image"}
               />
               {currentUser.username === post.user.username ? (
                 <YouWrapper>
@@ -501,7 +616,7 @@ function Comment({ post, currentUser, ...props }) {
               <When>{post.createdAt}</When>
             </AuthorWhenWrapper>
 
-            <ActionPanel>
+            <ActionPanel top={true}>
               <ActionWrapper
                 active={replyTo}
                 onClick={() => {
@@ -512,6 +627,7 @@ function Comment({ post, currentUser, ...props }) {
                   src={"/frontendmentor_2/images/icon-reply.svg"}
                   width={15}
                   height={15}
+                  alt={"reply icon"}
                 />
                 <ActionLabel>Reply</ActionLabel>
               </ActionWrapper>
@@ -528,6 +644,7 @@ function Comment({ post, currentUser, ...props }) {
                       src={"/frontendmentor_2/images/icon-delete.svg"}
                       width={15}
                       height={15}
+                      alt={"delete icon"}
                     />
                     <ActionLabel style={{ color: "var(--color-soft-red)" }}>
                       Delete
@@ -543,6 +660,7 @@ function Comment({ post, currentUser, ...props }) {
                       src={"/frontendmentor_2/images/icon-edit.svg"}
                       width={15}
                       height={15}
+                      alt={"edit icon"}
                     />
                     <ActionLabel>Edit</ActionLabel>
                   </ActionWrapper>
@@ -554,7 +672,19 @@ function Comment({ post, currentUser, ...props }) {
           </TopRow>
 
           {!updateThis ? (
-            <CommentContainer>{post.content}</CommentContainer>
+            <CommentContainer>
+              {post.content.split(" ").map((word, idx) => {
+                if (userNames.includes(word.replace("@", ""))) {
+                  return <AtUserName>{word}</AtUserName>;
+                }
+
+                if (idx === post.content.length - 1) {
+                  return word;
+                }
+
+                return word + " ";
+              })}
+            </CommentContainer>
           ) : (
             <UpdateWrapper>
               <TextArea ref={updateRef} rows={3} />
@@ -603,6 +733,21 @@ function Comment({ post, currentUser, ...props }) {
           >
             SEND
           </Button>
+
+          <MobileReplyWrapper>
+            <img
+              src={currentUser.image.webp.replace("./", "/frontendmentor_2/")}
+              width={40}
+              height={40}
+            />
+            <Button
+              onClick={() => {
+                createNewComment(post.id, currentUser);
+              }}
+            >
+              SEND
+            </Button>
+          </MobileReplyWrapper>
         </ReplyToWrapper>
       ) : (
         ""

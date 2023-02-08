@@ -1,5 +1,6 @@
 import Comment from "../Comment";
 import styled from "styled-components";
+import { QUERIES } from "../constants";
 import { useState, createContext, useEffect, useCallback } from "react";
 
 const Wrapper = styled.main`
@@ -11,12 +12,18 @@ const Wrapper = styled.main`
   font-family: var(--font-primary);
   gap: 16px;
   margin: 0 auto;
+
+  @media ${QUERIES.phoneAndSmaller} {
+    width: 100%;
+    padding: 36px 12px;
+  }
 `;
 
 export const DataContext = createContext();
 
 function MainBody({ data }) {
   const [posts, setPosts] = useState(data.comments ?? []);
+  const [userNames, setUserNames] = useState([]);
   const [changed, setChanged] = useState(false);
   const [maxId, setMaxId] = useState(0);
 
@@ -36,21 +43,40 @@ function MainBody({ data }) {
 
       return result;
     },
-    [maxId]
+    [maxId, userNames]
   );
+
+  const fetchUserNames = (comments) => {
+    for (let comment of comments) {
+      if (!userNames.includes(comment.user.username)) {
+        const tmp = [...userNames];
+        tmp.push(comment.user.username);
+        setUserNames(tmp);
+      }
+
+      if (comment.replies && comment.replies.length > 0) {
+        fetchUserNames(comment.replies);
+      }
+    }
+  };
 
   useEffect(() => {
     if (changed) {
       const tmp = sortCommentsOnScore(posts);
       setPosts(tmp);
       setChanged(false);
+      fetchUserNames(posts);
     }
   }, [posts, changed, sortCommentsOnScore]);
+
+  useEffect(() => {
+    fetchUserNames(posts);
+  }, []);
 
   return (
     <Wrapper>
       <DataContext.Provider
-        value={{ posts, setPosts, setChanged, maxId, setMaxId }}
+        value={{ posts, setPosts, setChanged, maxId, setMaxId, userNames }}
       >
         {posts && posts.length > 0
           ? posts.map((comm) => (
