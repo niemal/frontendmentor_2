@@ -84,6 +84,13 @@ body, input, button, select, option {
   font-family: var(--font-family);
   font-weight: var(--font-weight-light);
 }
+button {
+  display: block;
+  padding: 0;
+  background-color: transparent;
+  border: none;
+  font-size: inherit;
+}
 h1, h2, h3, h4, h5, h6, strong {
   font-weight: var(--font-weight-bold);
 }

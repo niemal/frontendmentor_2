@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import { useContext } from "react";
+import ClickableWrapper from "../ClickableWrapper";
 
 const Wrapper = styled.div`
   z-index: 999;
@@ -53,6 +54,10 @@ const Button = styled.div`
   transition: all 0.3s ease-in-out;
   cursor: pointer;
 
+  &:focus {
+    outline: 3px inset var(--color-moderate-blue);
+  }
+
   &:hover {
     background-color: ${(p) =>
       p.cancel ? "var(--color-dark-blue)" : "var(--color-pale-red)"};
@@ -76,21 +81,25 @@ function Modal({ context }) {
           comment and can't be undone.
         </MainContent>
         <ButtonRow>
-          <Button
+          <ClickableWrapper
+            type="button"
+            tabindex={"0"}
             cancel={true}
             onClick={() => {
               setModalOn(false);
             }}
           >
-            NO, CANCEL
-          </Button>
-          <Button
+            <Button>NO, CANCEL</Button>
+          </ClickableWrapper>
+          <ClickableWrapper
+            type="button"
+            tabindex={"0"}
             onClick={() => {
               deleteById();
             }}
           >
-            YES, DELETE
-          </Button>
+            <Button>YES, DELETE</Button>
+          </ClickableWrapper>
         </ButtonRow>
       </ModalWrapper>
     </Wrapper>

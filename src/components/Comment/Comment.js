@@ -3,6 +3,9 @@ import { QUERIES } from "../constants";
 import { useState, useContext, useEffect, useRef, createContext } from "react";
 import { DataContext } from "../MainBody";
 import Modal from "../Modal";
+import ActionWrapper from "../ActionWrapper";
+import UpvoteDownvote from "../UpvoteDownvote";
+import Button from "../Button";
 
 const slideIn = keyframes`
   0% {
@@ -67,26 +70,6 @@ const UpvoteWrapper = styled.div`
     width: max-content;
     padding: 10px;
     gap: 16px;
-  }
-`;
-
-const UpvoteDownvote = styled.div`
-  transition: all 0.5s ease-in-out;
-  color: var(--color-moderate-blue);
-  cursor: pointer;
-
-  &:active {
-    color: var(--color-dark-blue);
-  }
-
-  & img {
-    object-fit: cover;
-    transition: all 0.35s ease-in-out;
-  }
-
-  &:hover img {
-    filter: invert(21%) sepia(18%) saturate(939%) hue-rotate(171deg)
-      brightness(94%) contrast(87%);
   }
 `;
 
@@ -203,30 +186,6 @@ const MobileWrapper = styled.div`
   justify-content: space-between;
 `;
 
-const ActionWrapper = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  transition: all 0.35s ease-in-out;
-  color: ${(p) =>
-    p.active ? "var(--color-light-gray-blue)" : "var(--color-moderate-blue)"};
-  cursor: pointer;
-
-  & img {
-    transition: all 0.35s ease-in-out;
-    object-fit: cover;
-    ${(p) =>
-      p.active
-        ? "filter: invert(80%) sepia(24%) saturate(547%) hue-rotate(201deg) brightness(95%) contrast(96%);"
-        : ""}
-  }
-
-  &:hover {
-    color: ${(p) =>
-      p.delete ? "var(--color-pale-red)" : "var(--color-dark-blue)"};
-  }
-`;
-
 const ActionLabel = styled.span`
   font-weight: var(--font-weight-medium);
 `;
@@ -288,27 +247,6 @@ const TextArea = styled.textarea`
   &:focus {
     outline: none;
     border-color: var(--color-moderate-blue);
-  }
-`;
-
-const Button = styled.div`
-  cursor: pointer;
-  transition: all 0.35s ease-in-out;
-  background-color: var(--color-moderate-blue);
-  border-radius: 8px;
-  display: grid;
-  place-content: center;
-  color: var(--color-white);
-  font-weight: var(--font-weight-medium);
-  font-size: 18px;
-  padding: 12px 36px;
-  height: max-content;
-  width: max-content;
-
-  transition: all 0.25s ease-in;
-  &:hover {
-    background-color: var(--color-light-gray-blue);
-    color: var(--color-moderate-blue);
   }
 `;
 
