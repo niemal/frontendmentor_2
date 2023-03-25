@@ -43,7 +43,7 @@ const ButtonRow = styled.div`
   justify-content: center;
 `;
 
-const Button = styled.div`
+const Button = styled.button`
   background-color: ${(p) =>
     p.cancel ? "var(--color-gray-blue)" : "var(--color-soft-red)"};
   color: var(--color-light-gray);

@@ -79,9 +79,10 @@ function MainBody({ data }) {
         value={{ posts, setPosts, setChanged, maxId, setMaxId, userNames }}
       >
         {posts && posts.length > 0
-          ? posts.map((comm) => (
+          ? posts.map((comm, idx) => (
               <Comment
                 key={`comment-${comm.id}`}
+                aria-describedby={"Comment post number " + (idx + 1)}
                 post={comm}
                 currentUser={data.currentUser}
               />

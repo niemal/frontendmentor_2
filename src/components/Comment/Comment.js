@@ -6,6 +6,7 @@ import Modal from "../Modal";
 import ActionWrapper from "../ActionWrapper";
 import UpvoteDownvote from "../UpvoteDownvote";
 import Button from "../Button";
+import VisuallyHidden from "../VisuallyHidden";
 
 const slideIn = keyframes`
   0% {
@@ -463,8 +464,13 @@ function Comment({ post, currentUser, ...props }) {
                 width={12}
                 alt={"vote up"}
               />
+              <VisuallyHidden>Vote up comment</VisuallyHidden>
             </UpvoteDownvote>
-            <VoteDisplay update={voteChangeVisual}>{voteCount}</VoteDisplay>
+            <VoteDisplay update={voteChangeVisual}>
+              {voteCount}
+
+              <VisuallyHidden>Comment votes are {voteCount}.</VisuallyHidden>
+            </VoteDisplay>
             <UpvoteDownvote
               onClick={() => {
                 setVoteCount((c) => c - 1);
@@ -477,10 +483,12 @@ function Comment({ post, currentUser, ...props }) {
                 alt={"vote down"}
                 style={{ marginBottom: "3px" }}
               />
+              <VisuallyHidden>Vote down comment</VisuallyHidden>
             </UpvoteDownvote>
           </UpvoteWrapper>
-          <ActionPanel>
+          <ActionPanel aria-describedby={"Comment action panel"}>
             <ActionWrapper
+              aria-label={"Reply to comment."}
               active={replyTo}
               onClick={() => {
                 setReplyTo((r) => !r);
@@ -493,6 +501,7 @@ function Comment({ post, currentUser, ...props }) {
                 alt={"reply icon"}
               />
               <ActionLabel>Reply</ActionLabel>
+              <VisuallyHidden>Reply to comment.</VisuallyHidden>
             </ActionWrapper>
             {currentUser.username === post.user.username ? (
               <>
@@ -512,6 +521,7 @@ function Comment({ post, currentUser, ...props }) {
                   <ActionLabel style={{ color: "var(--color-soft-red)" }}>
                     Delete
                   </ActionLabel>
+                  <VisuallyHidden>Delete comment.</VisuallyHidden>
                 </ActionWrapper>
                 <ActionWrapper
                   active={updateThis}
@@ -526,6 +536,7 @@ function Comment({ post, currentUser, ...props }) {
                     alt={"edit icon"}
                   />
                   <ActionLabel>Edit</ActionLabel>
+                  <VisuallyHidden>Edit comment.</VisuallyHidden>
                 </ActionWrapper>
               </>
             ) : (
@@ -554,8 +565,9 @@ function Comment({ post, currentUser, ...props }) {
               <When>{post.createdAt}</When>
             </AuthorWhenWrapper>
 
-            <ActionPanel top={true}>
+            <ActionPanel top={true} aria-describedby={"Comment action panel."}>
               <ActionWrapper
+                aria-label={"Reply to comment."}
                 active={replyTo}
                 onClick={() => {
                   setReplyTo((r) => !r);
@@ -568,6 +580,7 @@ function Comment({ post, currentUser, ...props }) {
                   alt={"reply icon"}
                 />
                 <ActionLabel>Reply</ActionLabel>
+                <VisuallyHidden>Reply to comment.</VisuallyHidden>
               </ActionWrapper>
               {currentUser.username === post.user.username ? (
                 <>
@@ -587,6 +600,7 @@ function Comment({ post, currentUser, ...props }) {
                     <ActionLabel style={{ color: "var(--color-soft-red)" }}>
                       Delete
                     </ActionLabel>
+                    <VisuallyHidden>Delete comment.</VisuallyHidden>
                   </ActionWrapper>
                   <ActionWrapper
                     active={updateThis}
@@ -601,6 +615,7 @@ function Comment({ post, currentUser, ...props }) {
                       alt={"edit icon"}
                     />
                     <ActionLabel>Edit</ActionLabel>
+                    <VisuallyHidden>Edit comment.</VisuallyHidden>
                   </ActionWrapper>
                 </>
               ) : (
@@ -634,6 +649,7 @@ function Comment({ post, currentUser, ...props }) {
                 }}
               >
                 UPDATE
+                <VisuallyHidden>Update comment button</VisuallyHidden>
               </Button>
             </UpdateWrapper>
           )}
@@ -670,6 +686,7 @@ function Comment({ post, currentUser, ...props }) {
             }}
           >
             SEND
+            <VisuallyHidden>Send comment button</VisuallyHidden>
           </Button>
 
           <MobileReplyWrapper>
@@ -684,6 +701,7 @@ function Comment({ post, currentUser, ...props }) {
               }}
             >
               SEND
+              <VisuallyHidden>Send comment button</VisuallyHidden>
             </Button>
           </MobileReplyWrapper>
         </ReplyToWrapper>
